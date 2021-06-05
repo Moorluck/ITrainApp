@@ -42,6 +42,14 @@ public class MainActivity extends AppCompatActivity {
             if (item.getItemId() == R.id.menu_gare) {
 
                 FragmentTransaction transactionToStationFragment = fm.beginTransaction();
+
+                transactionToStationFragment.setCustomAnimations(
+                        android.R.anim.fade_in,
+                        android.R.anim.fade_out,
+                        android.R.anim.fade_in,
+                        android.R.anim.fade_out
+                );
+
                 transactionToStationFragment.replace(R.id.fl_main_fragment_container, stationFragment);
 
                 transactionToStationFragment.commit();
@@ -51,7 +59,16 @@ public class MainActivity extends AppCompatActivity {
             else if (item.getItemId() == R.id.menu_favorites){
 
                 FragmentTransaction transactionToFavoritesFragment = fm.beginTransaction();
+
+                transactionToFavoritesFragment.setCustomAnimations(
+                        android.R.anim.fade_in,
+                        android.R.anim.fade_out,
+                        android.R.anim.fade_in,
+                        android.R.anim.fade_out
+                );
+
                 transactionToFavoritesFragment.replace(R.id.fl_main_fragment_container, favoritesFragment);
+
 
                 transactionToFavoritesFragment.commit();
 
@@ -63,12 +80,12 @@ public class MainActivity extends AppCompatActivity {
 
         });
 
-        TrainAdapter.setFavoriteItemClickListener(v -> {
-            //TODO
+        TrainAdapter.setFavoriteItemClickListener(trainID -> {
+            //TODO Add train to préférence
         });
 
-        TrainAdapter.setListItemClickListener(v -> {
-            //TODO
+        TrainAdapter.setListItemClickListener(trainID -> {
+            //TODO Go to detail activity
         });
 
     }

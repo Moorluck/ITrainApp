@@ -32,6 +32,8 @@ public class StationFragment extends Fragment {
     EditText etStation;
     ImageView btnSearch;
 
+    ArrayList<Train> trains;
+
     public static StationFragment newInstance() {
         return new StationFragment();
     }
@@ -56,6 +58,10 @@ public class StationFragment extends Fragment {
         etStation = v.findViewById(R.id.et_station_fragment);
         btnSearch = v.findViewById(R.id.btn_station_fragment_search);
 
+        btnSearch.setOnClickListener(view -> {
+            //TODO charge les données selon le etStation avec requete http
+        });
+
         return v;
     }
 
@@ -63,8 +69,7 @@ public class StationFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        // TODO charger les vrai données
-        ArrayList<Train> trains = new ArrayList<>();
+        trains = new ArrayList<>();
 
         trains.add(new Train("B000DF0", "Marseille", 1, 2, "10:05"));
         trains.add(new Train("B000DF0", "Marseille", 1, 2, "10:05"));

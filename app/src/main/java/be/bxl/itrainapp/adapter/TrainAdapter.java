@@ -54,6 +54,11 @@ public class TrainAdapter extends RecyclerView.Adapter<TrainAdapter.ViewHolder> 
             tvRetard = v.findViewById(R.id.tv_item_late);
             tvQuai = v.findViewById(R.id.tv_item_quai);
             btnFavorites = v.findViewById(R.id.img_item_favorites);
+
+            v.setOnClickListener(view -> {
+                listItemClickListener.onListItemClick(trains.get(getAdapterPosition()).getId());
+            });
+
         }
     }
 
@@ -78,8 +83,8 @@ public class TrainAdapter extends RecyclerView.Adapter<TrainAdapter.ViewHolder> 
 
         holder.btnFavorites.setOnClickListener(v -> {
             favoriteItemClickListener.onFavoriteItemClick(train.getId());
+            notifyDataSetChanged();
         });
-
     }
 
     @Override

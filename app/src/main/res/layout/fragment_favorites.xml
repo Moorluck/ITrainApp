@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Choisissez une gare"
+        android:text="@string/tv_fragment_favorites_title"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -49,5 +49,17 @@
         app:layout_constraintBottom_toBottomOf="@+id/tv_favorites_fragment"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/tv_favorites_fragment" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:src="@drawable/ic_baseline_keyboard_arrow_down_24"
+        app:layout_constraintBottom_toBottomOf="@+id/spinner_favorites_fragment"
+        app:layout_constraintEnd_toEndOf="@+id/spinner_favorites_fragment"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/spinner_favorites_fragment"
+        app:layout_constraintTop_toTopOf="@+id/spinner_favorites_fragment" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
