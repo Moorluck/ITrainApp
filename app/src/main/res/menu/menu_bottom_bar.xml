@@ -1,0 +1,12 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menu_gare"
+        android:enabled="true"
+        android:icon="@drawable/ic_baseline_train_24"
+        android:title="Gares"/>
+    <item
+        android:id="@+id/menu_favorites"
+        android:enabled="true"
+        android:icon="@drawable/ic_baseline_favorite_border_24"
+        android:title="Favoris"/>
+</menu>
