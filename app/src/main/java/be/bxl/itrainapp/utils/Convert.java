@@ -3,8 +3,7 @@ package be.bxl.itrainapp.utils;
 public class Convert {
     public static String convertLongToTime(long time) {
         long totalSec = time;
-        long day = totalSec/86400;
-        long hours = totalSec/3600 % 24;
+        long hours = totalSec/3600 % 24 + 2;
         long min = (totalSec/60) % 60;
 
         String hoursString = convertLongToTimeFormat(hours);
