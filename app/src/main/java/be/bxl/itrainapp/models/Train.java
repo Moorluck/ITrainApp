@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 public class Train {
 
+    private String station;
     private String id;
     private String destination;
     private int retard;
@@ -11,13 +12,14 @@ public class Train {
     private String depart;
     private ArrayList<Stop> stops;
 
-    public Train(String id, String destination, int retard, int quai, String depart, ArrayList<Stop> stops) {
-        this(id, destination, retard, quai, depart);
+    public Train(String id, String station, String destination, int retard, int quai, String depart, ArrayList<Stop> stops) {
+        this(id, station, destination, retard, quai, depart);
         this.stops = stops;
     }
 
-    public Train(String id, String destination, int retard, int quai, String depart) {
+    public Train(String id, String station, String destination, int retard, int quai, String depart) {
         this.id = id;
+        this.station = station;
         this.destination = destination;
         this.retard = retard;
         this.quai = quai;
@@ -71,5 +73,13 @@ public class Train {
 
     public void setStops(ArrayList<Stop> stops) {
         this.stops = stops;
+    }
+
+    public String getStation() {
+        return station;
+    }
+
+    public void setStation(String station) {
+        this.station = station;
     }
 }

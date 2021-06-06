@@ -17,9 +17,9 @@ import be.bxl.itrainapp.models.Train;
 
 public class TrainAdapter extends RecyclerView.Adapter<TrainAdapter.ViewHolder> {
 
-    ArrayList<Train> trains;
+    ArrayList<Train> trains = new ArrayList<>();
     public static ListItemClickListener listItemClickListener;
-    public static FavoriteItemClickListener favoriteItemClickListener;
+
 
     public TrainAdapter(ArrayList<Train> trains) {
         this.trains = trains;
@@ -33,18 +33,11 @@ public class TrainAdapter extends RecyclerView.Adapter<TrainAdapter.ViewHolder> 
         TrainAdapter.listItemClickListener = listItemClickListener;
     }
 
-    public interface FavoriteItemClickListener {
-        void onFavoriteItemClick(String trainId);
-    }
 
-    public static void setFavoriteItemClickListener(FavoriteItemClickListener favoriteItemClickListener) {
-        TrainAdapter.favoriteItemClickListener = favoriteItemClickListener;
-    }
 
     protected class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView tvDestination, tvDeparture, tvRetard, tvQuai;
-        ImageView btnFavorites;
 
         public ViewHolder(@NonNull View v) {
             super(v);
@@ -53,7 +46,6 @@ public class TrainAdapter extends RecyclerView.Adapter<TrainAdapter.ViewHolder> 
             tvDeparture = v.findViewById(R.id.tv_item_departure);
             tvRetard = v.findViewById(R.id.tv_item_late);
             tvQuai = v.findViewById(R.id.tv_item_quai);
-            btnFavorites = v.findViewById(R.id.img_item_favorites);
 
             v.setOnClickListener(view -> {
                 listItemClickListener.onListItemClick(trains.get(getAdapterPosition()).getId());
@@ -79,12 +71,8 @@ public class TrainAdapter extends RecyclerView.Adapter<TrainAdapter.ViewHolder> 
         holder.tvDestination.setText(train.getDestination());
         holder.tvDeparture.setText(train.getDepart());
         holder.tvRetard.setText(String.format("Retard : %s %s", String.valueOf(train.getRetard()), "'"));
-        holder.tvQuai.setText(String.format("Quai : %s", String.valueOf(train.getRetard())));
+        holder.tvQuai.setText(String.format("Quai : %s", String.valueOf(train.getQuai())));
 
-        holder.btnFavorites.setOnClickListener(v -> {
-            favoriteItemClickListener.onFavoriteItemClick(train.getId());
-            notifyDataSetChanged();
-        });
     }
 
     @Override

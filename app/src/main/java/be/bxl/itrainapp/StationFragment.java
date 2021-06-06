@@ -1,11 +1,13 @@
 package be.bxl.itrainapp;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Trace;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +19,7 @@ import java.util.ArrayList;
 
 import be.bxl.itrainapp.adapter.TrainAdapter;
 import be.bxl.itrainapp.models.Train;
+import be.bxl.itrainapp.trainapi.RequestListOfTrain;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -30,9 +33,25 @@ public class StationFragment extends Fragment {
     RecyclerView rvStation;
     TextView tvStation;
     EditText etStation;
-    ImageView btnSearch;
+    ImageView btnSearch, btnFavorite;
 
-    ArrayList<Train> trains;
+    ArrayList<Train> trains = new ArrayList<>();
+
+    boolean isFavorite = false;
+
+    public static TrainAdapter adapter;
+
+    public void setTvStationText(String stationName) {
+        tvStation.setText(stationName);
+    }
+
+    public boolean isFavorite() {
+        return isFavorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        isFavorite = favorite;
+    }
 
     public static StationFragment newInstance() {
         return new StationFragment();
@@ -53,32 +72,82 @@ public class StationFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_station, container, false);
 
-        rvStation = v.findViewById(R.id.rv_station_fragment);
+
         tvStation = v.findViewById(R.id.tv_favorites_fragment);
         etStation = v.findViewById(R.id.et_station_fragment);
         btnSearch = v.findViewById(R.id.btn_station_fragment_search);
+        btnFavorite = v.findViewById(R.id.btn_fragment_station_favorites);
+
+        // Gestion du Recycler view
+        rvStation = v.findViewById(R.id.rv_station_fragment);
+        rvStation.setLayoutManager(new LinearLayoutManager(getContext()));
+        adapter = new TrainAdapter(trains);
+        rvStation.setAdapter(adapter);
+
+        // Gestion de la requête http
+
+
 
         btnSearch.setOnClickListener(view -> {
-            //TODO charge les données selon le etStation avec requete http
+            setBtnFavoriteStatus();
+            onSearchButtonClickListener.onSearchButtonClick(etStation.getText().toString());
+        });
+
+        btnFavorite.setOnClickListener(view2 -> {
+            isFavorite = !isFavorite;
+
+            if (!trains.isEmpty()) {
+                favoriteItemClickListener.onFavoriteItemClick(trains.get(0).getStation());
+                setBtnFavoriteStatus();
+            }
         });
 
         return v;
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
+    // Favorite click
 
-        trains = new ArrayList<>();
-
-        trains.add(new Train("B000DF0", "Marseille", 1, 2, "10:05"));
-        trains.add(new Train("B000DF0", "Marseille", 1, 2, "10:05"));
-        trains.add(new Train("B000DF0", "Marseille", 1, 2, "10:05"));
-        trains.add(new Train("B000DF0", "Marseille", 1, 2, "10:05"));
-
-        rvStation.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        TrainAdapter adapter = new TrainAdapter(trains);
-        rvStation.setAdapter(adapter);
+    public interface FavoriteItemClickListener {
+        void onFavoriteItemClick(String stationName);
     }
+
+    public static FavoriteItemClickListener favoriteItemClickListener;
+
+    public void setFavoriteItemClickListener(FavoriteItemClickListener favoriteItemClickListener) {
+        StationFragment.favoriteItemClickListener = favoriteItemClickListener;
+    }
+
+    // Search click
+
+    public interface OnSearchButtonClickListener {
+       void onSearchButtonClick(String etValue);
+    }
+
+    OnSearchButtonClickListener onSearchButtonClickListener;
+
+    public void setOnSearchButtonClickListener(OnSearchButtonClickListener onSearchButtonClickListener) {
+        this.onSearchButtonClickListener = onSearchButtonClickListener;
+    }
+
+    // Set btn favorite status
+
+    public void setBtnFavoriteStatus() {
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+
+        if (!trains.isEmpty()) {
+            String stationNameInPreference = prefs.getString(trains.get(0).getStation(), null);
+
+            if (stationNameInPreference != null) {
+                isFavorite = true;
+                btnFavorite.setImageResource(R.drawable.ic_baseline_favorite_24);
+            } else {
+                isFavorite = false;
+                btnFavorite.setImageResource(R.drawable.ic_baseline_favorite_border_24);
+            }
+        }
+
+
+    }
+
 }

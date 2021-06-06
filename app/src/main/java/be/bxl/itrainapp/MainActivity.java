@@ -5,11 +5,20 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import be.bxl.itrainapp.adapter.TrainAdapter;
+import be.bxl.itrainapp.trainapi.RequestListOfTrain;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -80,14 +89,110 @@ public class MainActivity extends AppCompatActivity {
 
         });
 
-        TrainAdapter.setFavoriteItemClickListener(trainID -> {
-            //TODO Add train to préférence
-        });
+        // On Item Click
 
         TrainAdapter.setListItemClickListener(trainID -> {
             //TODO Go to detail activity
+            Intent intent = new Intent(getApplicationContext(), DetailActivity.class);
+            intent.putExtra(DetailActivity.TRAIN_ID_KEY, trainID);
+            startActivity(intent);
         });
 
+        // Station Fragment
+
+        // Request
+        stationFragment.setOnSearchButtonClickListener(station -> {
+            RequestListOfTrain requestListOfTrain = new RequestListOfTrain();
+            requestListOfTrain.setTrainListener(trainsResult -> {
+                if (trainsResult != null && !trainsResult.isEmpty()) {
+                    stationFragment.trains.clear();
+                    stationFragment.trains.addAll(trainsResult);
+                    StationFragment.adapter.notifyDataSetChanged();
+                    String stationName = stationFragment.trains.get(0).getStation();
+                    stationFragment.setTvStationText(stationName);
+                    stationFragment.setBtnFavoriteStatus();
+                    hideSoftKeyboard(getWindow().getDecorView());
+                }
+                else {
+                    Toast.makeText(this, getString(R.string.toast_search_fail), Toast.LENGTH_SHORT).show();
+                }
+            });
+            requestListOfTrain.execute(station);
+        });
+
+        // Favorites Button in Station Fragment
+        stationFragment.setFavoriteItemClickListener(stationName -> {
+
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+            SharedPreferences.Editor editor = prefs.edit();
+
+            String stationNameInPreference = prefs.getString(stationName, null);
+
+            if (stationNameInPreference != null) {
+                editor.remove(stationName);
+            }
+            else {
+                editor.putString(stationName, stationName);
+            }
+
+            editor.apply();
+
+        });
+
+        // Favorite Fragment
+
+        // Delete Favorite in Favorite Fragment
+
+        favoritesFragment.setOnDeleteClickListener(stationName -> {
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+            SharedPreferences.Editor editor = prefs.edit();
+
+            if (prefs.contains(stationName)) {
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+                builder.setCancelable(true);
+                builder.setMessage("Voulez vous supprimer cette gare de vos favoris ?");
+                builder.setPositiveButton("Oui", (dialog, which) -> {
+                    editor.remove(stationName);
+                    editor.apply();
+
+                    favoritesFragment.updateFavoritesStationNames();
+                    favoritesFragment.spinnerAdapter.notifyDataSetChanged();
+                });
+
+                builder.setNegativeButton("Non", (dialog, which) -> {
+
+                });
+
+                AlertDialog alertDialog = builder.create();
+
+                alertDialog.show();
+
+            }
+
+            editor.apply();
+        });
+
+        // Request : Spinner selected in favorite fragment
+
+        favoritesFragment.setOnItemSpinnerSelectedListener(stationName -> {
+            RequestListOfTrain requestListOfTrain = new RequestListOfTrain();
+            requestListOfTrain.setTrainListener(trainsResult -> {
+                if (trainsResult != null && !trainsResult.isEmpty()) {
+                    favoritesFragment.trains.clear();
+                    favoritesFragment.trains.addAll(trainsResult);
+                    FavoritesFragment.adapter.notifyDataSetChanged();
+                    favoritesFragment.setTvFavoritesText(stationName);
+                }
+            });
+            requestListOfTrain.execute(stationName);
+        });
+    }
+
+    public void hideSoftKeyboard(View view){
+        InputMethodManager imm =(InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
 

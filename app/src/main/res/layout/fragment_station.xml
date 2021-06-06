@@ -55,4 +55,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/et_station_fragment" />
 
+    <ImageView
+        android:id="@+id/btn_fragment_station_favorites"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_baseline_favorite_border_24"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_favorites_fragment"
+        app:layout_constraintEnd_toEndOf="@+id/btn_station_fragment_search"
+        app:layout_constraintStart_toStartOf="@+id/btn_station_fragment_search"
+        app:layout_constraintTop_toTopOf="@+id/tv_favorites_fragment" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

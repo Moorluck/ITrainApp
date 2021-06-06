@@ -5,4 +5,6 @@
     <string name="et_fragment_station_hint">Insérez le nom d\'une gare</string>
     <string name="tv_fragment_station_title">Cherchez une gare</string>
     <string name="tv_fragment_favorites_title">Choisissez une gare</string>
+    <string name="toast_search_fail">Nous n\'avons pas trouvé de gare associée à votre recherche !</string>
+    <string name="tv_detail_activity_title">Arrets</string>
 </resources>
